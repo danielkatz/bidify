@@ -1,7 +1,9 @@
 {
   "name": "Bidify",
+  "short_name": "Bidify",
   "description": "Enabling RTL support via Unicode controls for bidi text",
   "version": "1.0",
+  "author": "Daniel Katz",
   "permissions": ["contextMenus"],
   "background": {
     "persistent": false,
