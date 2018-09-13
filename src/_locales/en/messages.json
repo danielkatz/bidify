@@ -1,0 +1,26 @@
+{
+    "extName": {
+        "message": "Bidify",
+        "description": "The name (maximum of 45 characters) is the primary identifier of the extension and is a required field"
+    },
+    "extDescription": {
+        "message": "Enabling RTL support via Unicode controls for bidi text",
+        "description": "A plain text string (no HTML or other formatting; no more than 132 characters) that describes the extension"
+    },
+    "i10n_rootMenu": {
+        "message": "Embed Direction",
+        "description": "The text of the root menu element"
+    },
+    "i10n_ltrCommandMenu": {
+        "message": "Left to Right",
+        "description": "The text of the LTR command menu"
+    },
+    "i10n_rtlCommandMenu": {
+        "message": "Right to Left",
+        "description": "The text of the RTL command menu"
+    },
+    "i10n_resetCommandMenu": {
+        "message": "Reset Direction",
+        "description": "The text of the Reset command menu"
+    }
+}
