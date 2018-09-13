@@ -4,7 +4,7 @@
         "description": "The name (maximum of 45 characters) is the primary identifier of the extension and is a required field"
     },
     "extDescription": {
-        "message": "Enabling RTL support via Unicode controls for bidi text",
+        "message": "Type and read Right to Left languages anywhere!",
         "description": "A plain text string (no HTML or other formatting; no more than 132 characters) that describes the extension"
     },
     "i10n_rootMenu": {
