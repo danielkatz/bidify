@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+      "allowSyntheticDefaultImports": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "target": "es2016",
+      "sourceMap": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "allowJs": true,
+      "types": [
+        "node",
+        "lodash",
+        "chrome"
+      ]
+    },
+    "presets": [
+      "env",
+      {
+        "modules": false
+      }
+    ],
+    "include": [
+      "**/*",
+    ],
+    "exclude": [
+      "node_modules",
+      "dist"
+    ]
+  }
