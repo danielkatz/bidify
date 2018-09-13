@@ -33,7 +33,7 @@ import _ from 'lodash';
         while (doc) {
             let elem = doc.activeElement;
 
-            if (elem && elem.nodeName === "IFRAME") {
+            if (elem && elem instanceof HTMLIFrameElement) {
                 doc = elem.contentDocument;
             } else {
                 return doc;
@@ -88,14 +88,16 @@ import _ from 'lodash';
     }
 
     function onWatchedInputChanged(event) {
-        
+
     }
 
     chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
 
     window.addEventListener("input", (event) => {
-        if (simpleElements.includes(event.target.nodeName)) {
-            var value = event.target.value;
+        let target = <Element>event.target;
+
+        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+            var value = target.value;
 
             if (value.includes(LEFT_TO_RIGHT_EMBEDDING)
                 || value.includes(RIGHT_TO_LEFT_EMBEDDING)
