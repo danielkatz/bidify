@@ -1,0 +1,30 @@
+{
+  "name": "bidify",
+  "version": "1.0.0",
+  "description": "Google Chrome extension that allows to type and read RTL languages anywhere!",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielkatz/bidify.git"
+  },
+  "keywords": [],
+  "author": "Daniel Katz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/danielkatz/bidify/issues"
+  },
+  "homepage": "https://github.com/danielkatz/bidify#readme",
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
+    "webpack": "^4.18.1",
+    "webpack-cli": "^3.1.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11"
+  }
+}

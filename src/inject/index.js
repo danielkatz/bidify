@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 (function () {
     const simpleElements = ["INPUT", "TEXTAREA"];
     const LEFT_TO_RIGHT_EMBEDDING = "\u202A";
