@@ -1,110 +1,106 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-(function () {
-    const simpleElements = ["INPUT", "TEXTAREA"];
-    const LEFT_TO_RIGHT_EMBEDDING = "\u202A";
-    const RIGHT_TO_LEFT_EMBEDDING = "\u202B";
-    const POP_DIRECTIONAL_FORMATTING = "\u202C";
+const LEFT_TO_RIGHT_EMBEDDING: string = "\u202A";
+const RIGHT_TO_LEFT_EMBEDDING: string = "\u202B";
+const POP_DIRECTIONAL_FORMATTING: string = "\u202C";
 
-    function onCommand(command) {
-        const doc = getActiveDocument();
+function onCommand(command: string): void {
+    const doc: Document = getActiveDocument();
 
-        if (doc) {
-            const editable = doc.activeElement;
+    if (doc) {
+        const editable: Element = doc.activeElement;
 
-            if (editable) {
-                if (simpleElements.includes(editable.nodeName)) {
-                    applyCommandToSimpleInputElement(editable, command);
-                } else if (editable.attributes["contenteditable"].value === "true") {
-                    applyCommandToContentEditableElement(editable, command);
-                }
-
-            } else {
-                console.log("Active Document doesn't have an active element!");
+        if (editable) {
+            if (editable instanceof HTMLInputElement || editable instanceof HTMLTextAreaElement) {
+                applyCommandToSimpleInputElement(editable, command);
+            } else if (editable.attributes.getNamedItem("contenteditable").value === "true") {
+                applyCommandToContentEditableElement(editable, command);
             }
+
         } else {
-            console.log("Active Document is in an unsupported state!");
+            console.log("Active Document doesn't have an active element!");
+        }
+    } else {
+        console.log("Active Document is in an unsupported state!");
+    }
+}
+
+function getActiveDocument(): Document {
+    let doc: Document = window.document;
+
+    while (doc) {
+        let elem: Element = doc.activeElement;
+
+        if (elem && elem instanceof HTMLIFrameElement) {
+            doc = elem.contentDocument;
+        } else {
+            return doc;
         }
     }
 
-    function getActiveDocument() {
-        let doc = window.document;
+    return null;
+}
 
-        while (doc) {
-            let elem = doc.activeElement;
+function applyCommandToSimpleInputElement(element: HTMLInputElement | HTMLTextAreaElement, command: string): void {
+    let startIndex: number = element.selectionStart;
+    let endIndex: number = element.selectionEnd;
+    let text: string = element.value;
 
-            if (elem && elem instanceof HTMLIFrameElement) {
-                doc = elem.contentDocument;
-            } else {
-                return doc;
-            }
+    if (text.length > 0) {
+        if (startIndex === endIndex) {
+            startIndex = 0;
+            endIndex = text.length;
         }
 
-        return null;
-    }
+        if (command === "reset") {
+            let result: string = text
+                .replace(LEFT_TO_RIGHT_EMBEDDING, "")
+                .replace(RIGHT_TO_LEFT_EMBEDDING, "")
+                .replace(POP_DIRECTIONAL_FORMATTING, "");
 
-    function applyCommandToSimpleInputElement(element, command) {
-        let startIndex = element.selectionStart;
-        let endIndex = element.selectionEnd;
-        let text = element.value;
+            element.value = result;
+        } else {
+            let [opening, closing] = getControlCharachters(command);
+            let pre: string = text.slice(0, startIndex);
+            let subject: string = text.slice(startIndex, endIndex);
+            let post: string = text.slice(endIndex, text.length);
 
-        if (text.length > 0) {
-            if (startIndex === endIndex) {
-                startIndex = 0;
-                endIndex = text.length;
-            }
+            let result: string = pre + opening + subject + closing + post;
 
-            if (command === "reset") {
-                let result = text
-                    .replace(LEFT_TO_RIGHT_EMBEDDING, "")
-                    .replace(RIGHT_TO_LEFT_EMBEDDING, "")
-                    .replace(POP_DIRECTIONAL_FORMATTING, "");
-
-                element.value = result;
-            } else {
-                let [opening, closing] = getControlCharachters(command);
-                let pre = text.slice(0, startIndex);
-                let subject = text.slice(startIndex, endIndex);
-                let post = text.slice(endIndex, text.length);
-
-                let result = pre + opening + subject + closing + post;
-
-                element.value = result;
-            }
+            element.value = result;
         }
     }
+}
 
-    function getControlCharachters(command) {
-        if (command === "ltr") {
-            return [LEFT_TO_RIGHT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
-        } else if (command === "rtl") {
-            return [RIGHT_TO_LEFT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
+function getControlCharachters(command: string): [string, string] {
+    if (command === "ltr") {
+        return [LEFT_TO_RIGHT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
+    } else if (command === "rtl") {
+        return [RIGHT_TO_LEFT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
+    }
+    return ["", ""];
+}
+
+function applyCommandToContentEditableElement(element: Element, command: string): void {
+    console.log("contenteditable elements arn't supported yet!");
+}
+
+// tslint:disable-next-line:no-empty
+function onWatchedInputChanged(event: Event): void { }
+
+chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
+
+window.addEventListener("input", (event: Event) => {
+    let target: Element = <Element>event.target;
+
+    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
+        var value: string = target.value;
+
+        if (value.includes(LEFT_TO_RIGHT_EMBEDDING)
+            || value.includes(RIGHT_TO_LEFT_EMBEDDING)
+            || value.includes(POP_DIRECTIONAL_FORMATTING)) {
+
+            onWatchedInputChanged(event);
         }
-        return ["", ""];
     }
-
-    function applyCommandToContentEditableElement(element, command) {
-        console.log("contenteditable elements arn't supported yet!");
-    }
-
-    function onWatchedInputChanged(event) {
-
-    }
-
-    chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
-
-    window.addEventListener("input", (event) => {
-        let target = <Element>event.target;
-
-        if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
-            var value = target.value;
-
-            if (value.includes(LEFT_TO_RIGHT_EMBEDDING)
-                || value.includes(RIGHT_TO_LEFT_EMBEDDING)
-                || value.includes(POP_DIRECTIONAL_FORMATTING)) {
-
-                onWatchedInputChanged(event);
-            }
-        }
-    }, true);
-})();
+}, true);
