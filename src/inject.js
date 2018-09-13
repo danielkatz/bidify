@@ -6,24 +6,23 @@
 
     function onCommand(command) {
         const doc = getActiveDocument();
-        console.log(doc);
 
-        if (!doc) {
-            console.warn("Active Document is in an unsupported state!");
-            return;
-        }
+        if (doc) {
+            if (editable) {
 
-        const editable = doc.activeElement;
+                const editable = doc.activeElement;
 
-        if (!editable) {
-            console.warn("Active Document doesn't have an active element!");
-            return;
-        }
+                if (simpleElements.includes(editable.nodeName)) {
+                    applyCommandToSimpleInputElement(editable, command);
+                } else if (editable.attributes["contenteditable"].value === "true") {
+                    applyCommandToContentEditableElement(editable, command);
+                }
 
-        if (simpleElements.includes(editable.nodeName)) {
-            applyCommandToSimpleInputElement(editable, command);
-        } else if (editableattributes["contenteditable"].value == "true") {
-            applyCommandToContentEditableElement(editable, command);
+            } else {
+                console.log("Active Document doesn't have an active element!");
+            }
+        } else {
+            console.log("Active Document is in an unsupported state!");
         }
     }
 
@@ -51,7 +50,7 @@
         if (text.length > 0) {
             if (startIndex === endIndex) {
                 startIndex = 0;
-                endIndex = text.length - 1;
+                endIndex = text.length;
             }
 
             if (command === "reset") {
@@ -85,13 +84,9 @@
     }
 
     function applyCommandToContentEditableElement(element, command) {
-        console.warn("contenteditable elements arn't supported yet!");
+        console.log("contenteditable elements arn't supported yet!");
     }
 
-    chrome.runtime.onMessage.addListener(
-        function (request, sender) {
-            onCommand(request.command);
-        }
-    );
+    chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
 
 })();
