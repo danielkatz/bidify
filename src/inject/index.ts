@@ -1,8 +1,7 @@
 import _ from "lodash";
-
-const LEFT_TO_RIGHT_EMBEDDING: string = "\u202A";
-const RIGHT_TO_LEFT_EMBEDDING: string = "\u202B";
-const POP_DIRECTIONAL_FORMATTING: string = "\u202C";
+import core from "./core";
+import simpleField from "./simpleField";
+import contentEditable from "./contentEditable";
 
 function onCommand(command: string): void {
     const doc: Document = getActiveDocument();
@@ -12,9 +11,9 @@ function onCommand(command: string): void {
 
         if (editable) {
             if (editable instanceof HTMLInputElement || editable instanceof HTMLTextAreaElement) {
-                applyCommandToSimpleInputElement(editable, command);
+                simpleField.applyCommand(editable, command);
             } else if (editable.attributes.getNamedItem("contenteditable").value === "true") {
-                applyCommandToContentEditableElement(editable, command);
+                contentEditable.applyCommand(editable, command);
             }
 
         } else {
@@ -41,66 +40,7 @@ function getActiveDocument(): Document {
     return null;
 }
 
-function applyCommandToSimpleInputElement(element: HTMLInputElement | HTMLTextAreaElement, command: string): void {
-    let startIndex: number = element.selectionStart;
-    let endIndex: number = element.selectionEnd;
-    let text: string = element.value;
-
-    if (text.length > 0) {
-        if (startIndex === endIndex) {
-            startIndex = 0;
-            endIndex = text.length;
-        }
-
-        if (command === "reset") {
-            let result: string = text
-                .replace(LEFT_TO_RIGHT_EMBEDDING, "")
-                .replace(RIGHT_TO_LEFT_EMBEDDING, "")
-                .replace(POP_DIRECTIONAL_FORMATTING, "");
-
-            element.value = result;
-        } else {
-            let [opening, closing] = getControlCharachters(command);
-            let pre: string = text.slice(0, startIndex);
-            let subject: string = text.slice(startIndex, endIndex);
-            let post: string = text.slice(endIndex, text.length);
-
-            let result: string = pre + opening + subject + closing + post;
-
-            element.value = result;
-        }
-    }
-}
-
-function getControlCharachters(command: string): [string, string] {
-    if (command === "ltr") {
-        return [LEFT_TO_RIGHT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
-    } else if (command === "rtl") {
-        return [RIGHT_TO_LEFT_EMBEDDING, POP_DIRECTIONAL_FORMATTING];
-    }
-    return ["", ""];
-}
-
-function applyCommandToContentEditableElement(element: Element, command: string): void {
-    console.log("contenteditable elements arn't supported yet!");
-}
-
-// tslint:disable-next-line:no-empty
-function onWatchedInputChanged(event: Event): void { }
-
 chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
 
-window.addEventListener("input", (event: Event) => {
-    let target: Element = <Element>event.target;
-
-    if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
-        var value: string = target.value;
-
-        if (value.includes(LEFT_TO_RIGHT_EMBEDDING)
-            || value.includes(RIGHT_TO_LEFT_EMBEDDING)
-            || value.includes(POP_DIRECTIONAL_FORMATTING)) {
-
-            onWatchedInputChanged(event);
-        }
-    }
-}, true);
+simpleField.observeChanges(window);
+contentEditable.observeChanges(window);
