@@ -8,10 +8,9 @@
         const doc = getActiveDocument();
 
         if (doc) {
+            const editable = doc.activeElement;
+
             if (editable) {
-
-                const editable = doc.activeElement;
-
                 if (simpleElements.includes(editable.nodeName)) {
                     applyCommandToSimpleInputElement(editable, command);
                 } else if (editable.attributes["contenteditable"].value === "true") {
@@ -61,11 +60,10 @@
 
                 element.value = result;
             } else {
+                let [opening, closing] = getControlCharachters(command);
                 let pre = text.slice(0, startIndex);
                 let subject = text.slice(startIndex, endIndex);
                 let post = text.slice(endIndex, text.length);
-
-                let [opening, closing] = getControlCharachters(command);
 
                 let result = pre + opening + subject + closing + post;
 
@@ -87,6 +85,22 @@
         console.log("contenteditable elements arn't supported yet!");
     }
 
+    function onWatchedInputChanged(event) {
+        
+    }
+
     chrome.runtime.onMessage.addListener((request, sender) => onCommand(request.command));
 
+    window.addEventListener("input", (event) => {
+        if (simpleElements.includes(event.target.nodeName)) {
+            var value = event.target.value;
+
+            if (value.includes(LEFT_TO_RIGHT_EMBEDDING)
+                || value.includes(RIGHT_TO_LEFT_EMBEDDING)
+                || value.includes(POP_DIRECTIONAL_FORMATTING)) {
+
+                onWatchedInputChanged(event);
+            }
+        }
+    }, true);
 })();
