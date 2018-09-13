@@ -1,6 +1,6 @@
 {
   "name": "Bidify",
-  "description": "Enabeling RTL support via Unicode controls for bidi text",
+  "description": "Enabling RTL support via Unicode controls for bidi text",
   "version": "1.0",
   "permissions": ["contextMenus"],
   "background": {
