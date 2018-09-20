@@ -1,4 +1,4 @@
-import core from "./core";
+import {unicodeCodes} from "./core";
 
 function applyCommand(element: HTMLInputElement | HTMLTextAreaElement, command: string): void {
     let text = element.value;
@@ -32,18 +32,18 @@ function applyEmbedDirectionCommand(command: string, text: string, element: HTML
 
 function applyResetCommand(text: string, element: HTMLInputElement | HTMLTextAreaElement): void {
     let result = text
-        .replace(core.LEFT_TO_RIGHT_EMBEDDING, "")
-        .replace(core.RIGHT_TO_LEFT_EMBEDDING, "")
-        .replace(core.POP_DIRECTIONAL_FORMATTING, "");
+        .replace(unicodeCodes.LEFT_TO_RIGHT_EMBEDDING, "")
+        .replace(unicodeCodes.RIGHT_TO_LEFT_EMBEDDING, "")
+        .replace(unicodeCodes.POP_DIRECTIONAL_FORMATTING, "");
 
     element.value = result;
 }
 
 function getControlCharachters(command: string): [string, string] {
     if (command === "ltr") {
-        return [core.LEFT_TO_RIGHT_EMBEDDING, core.POP_DIRECTIONAL_FORMATTING];
+        return [unicodeCodes.LEFT_TO_RIGHT_EMBEDDING, unicodeCodes.POP_DIRECTIONAL_FORMATTING];
     } else if (command === "rtl") {
-        return [core.RIGHT_TO_LEFT_EMBEDDING, core.POP_DIRECTIONAL_FORMATTING];
+        return [unicodeCodes.RIGHT_TO_LEFT_EMBEDDING, unicodeCodes.POP_DIRECTIONAL_FORMATTING];
     }
     return ["", ""];
 }
@@ -55,9 +55,9 @@ function observeChanges(window: Window): void {
         if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
             let value: string = target.value;
 
-            if (value.includes(core.LEFT_TO_RIGHT_EMBEDDING)
-                || value.includes(core.RIGHT_TO_LEFT_EMBEDDING)
-                || value.includes(core.POP_DIRECTIONAL_FORMATTING)) {
+            if (value.includes(unicodeCodes.LEFT_TO_RIGHT_EMBEDDING)
+                || value.includes(unicodeCodes.RIGHT_TO_LEFT_EMBEDDING)
+                || value.includes(unicodeCodes.POP_DIRECTIONAL_FORMATTING)) {
 
                 onWatchedInputChanged(event);
             }
