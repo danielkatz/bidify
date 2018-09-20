@@ -10,6 +10,6 @@ function observeChanges(window: Window): void {
 }
 
 export default {
-    applyCommand: applyCommand,
-    observeChanges: observeChanges
+    applyCommand,
+    observeChanges,
 };

@@ -4,10 +4,10 @@ import simpleField from "./simpleField";
 import contentEditable from "./contentEditable";
 
 function onCommand(command: string): void {
-    const doc: Document = getActiveDocument();
+    const doc = getActiveDocument();
 
     if (doc) {
-        const editable: Element = doc.activeElement;
+        const editable = doc.activeElement;
 
         if (editable) {
             if (editable instanceof HTMLInputElement || editable instanceof HTMLTextAreaElement) {
@@ -25,7 +25,7 @@ function onCommand(command: string): void {
 }
 
 function getActiveDocument(): Document {
-    let doc: Document = window.document;
+    let doc = window.document;
 
     while (doc) {
         let elem: Element = doc.activeElement;
