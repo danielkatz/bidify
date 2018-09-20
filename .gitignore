@@ -62,3 +62,6 @@ typings/
 
 # Webpack output
 dist
+
+# junit xml files
+junit.xml
