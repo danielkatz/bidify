@@ -11,7 +11,7 @@ chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 chrome.runtime.onInstalled.addListener(() => {
 
-  var id: any = chrome.contextMenus.create({
+  const id: any = chrome.contextMenus.create({
     "title": chrome.i18n.getMessage("i10n_rootMenu"),
     "contexts": ["editable"],
     "id": "root"
