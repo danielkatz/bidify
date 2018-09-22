@@ -17,14 +17,14 @@ test_script:
   # run tests
   - npm test
 
-after_test:
-  - ps: |
-      $wc = New-Object 'System.Net.WebClient'
-      $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results\jest\results.xml))
-
 build_script:
   # Output useful info for debugging.
   - node --version
   - npm --version
   # run a build (node 4/webpack 1 will test with the build)
   - npm run build
+
+on_finish:
+  - ps: |
+      $wc = New-Object 'System.Net.WebClient'
+      $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\test-results\jest\results.xml))
