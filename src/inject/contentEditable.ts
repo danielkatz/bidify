@@ -1,5 +1,3 @@
-import core from "./core";
-
 function applyCommand(element: Element, command: string): void {
     console.log("contenteditable elements arn't supported yet!");
 }

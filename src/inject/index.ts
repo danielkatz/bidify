@@ -1,5 +1,4 @@
 import _ from "lodash";
-import core from "./core";
 import simpleField from "./simpleField";
 import contentEditable from "./contentEditable";
 
