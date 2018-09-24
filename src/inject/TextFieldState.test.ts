@@ -56,6 +56,11 @@ describe("toDebugString", () => {
         const input = new TextFieldState("A" + "\u202B" + "BCDE" + "\u202C" + "FG", 2, 5);
         expect(input.toDebugString()).toBe("A←[BCD]E♦FG");
     });
+
+    test("can generate selection at the end", () => {
+        const input = new TextFieldState("ABC", 3, 3);
+        expect(input.toDebugString()).toBe("ABC[]");
+    });
 });
 
 describe("fromDebugString", () => {
@@ -148,6 +153,15 @@ describe("fromDebugString", () => {
             value: "A" + "\u202B" + "BCDE" + "\u202C" + "FG",
             selectionStart: 2,
             selectionEnd: 5,
+        });
+    });
+
+    test("can parse selection at the end", () => {
+        const result = TextFieldState.fromDebugString("ABC[]");
+        expect(result).toEqual({
+            value: "ABC",
+            selectionStart: 3,
+            selectionEnd: 3,
         });
     });
 });

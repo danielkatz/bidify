@@ -7,7 +7,7 @@ export enum TransformationOperation {
     Natural
 }
 
-export class TextFieldStateStransformer {
+export class TextFieldStateTransformer {
 
     transform(input: TextFieldState, operation: TransformationOperation): TextFieldState {
         var applied = this.applyOperation(input, operation);

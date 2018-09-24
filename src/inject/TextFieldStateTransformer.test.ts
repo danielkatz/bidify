@@ -1,8 +1,8 @@
 import "jest";
-import { TextFieldStateStransformer, TransformationOperation } from "./TextFieldStateStransformer";
+import { TextFieldStateTransformer, TransformationOperation } from "./TextFieldStateTransformer";
 import TextFieldState from "./TextFieldState";
 
-const transformer = new TextFieldStateStransformer();
+const transformer = new TextFieldStateTransformer();
 
 describe("create an empty block", () => {
     test("LTR", () => {

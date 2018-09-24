@@ -48,10 +48,7 @@ export default class TextFieldState {
     toDebugString(): string {
         let result = "";
 
-        if (this.value.length === 0) {
-            result += SELECTION_START_SYMBOL;
-            result += SELECTION_END_SYMBOL;
-        } else {
+        if (this.value.length > 0) {
             for (let i = 0; i < this.value.length; i++) {
                 let char = this.value.charAt(i);
 
@@ -73,6 +70,14 @@ export default class TextFieldState {
                     result += char;
                 }
             }
+        }
+
+        if (this.selectionStart === this.value.length) {
+            result += SELECTION_START_SYMBOL;
+        }
+
+        if (this.selectionEnd === this.value.length) {
+            result += SELECTION_END_SYMBOL;
         }
 
         return result;
