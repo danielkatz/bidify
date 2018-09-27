@@ -1,6 +1,6 @@
 import "jest";
-import { TextFieldStateTransformer, TransformationOperation } from "./TextFieldStateTransformer";
 import TextFieldState from "./TextFieldState";
+import { TextFieldStateTransformer, TransformationOperation } from "./TextFieldStateTransformer";
 
 const transformer = new TextFieldStateTransformer();
 

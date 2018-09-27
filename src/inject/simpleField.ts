@@ -1,7 +1,7 @@
-import {unicodeCodes} from "./core";
+import { unicodeCodes } from "./core";
 
 function applyCommand(element: HTMLInputElement | HTMLTextAreaElement, command: string): void {
-    let text = element.value;
+    const text = element.value;
 
     if (text.length > 0) {
         if (command === "reset") {
@@ -12,7 +12,10 @@ function applyCommand(element: HTMLInputElement | HTMLTextAreaElement, command: 
     }
 }
 
-function applyEmbedDirectionCommand(command: string, text: string, element: HTMLInputElement | HTMLTextAreaElement): void {
+function applyEmbedDirectionCommand(
+    command: string,
+    text: string,
+    element: HTMLInputElement | HTMLTextAreaElement): void {
     let startIndex = element.selectionStart;
     let endIndex = element.selectionEnd;
 
@@ -21,17 +24,17 @@ function applyEmbedDirectionCommand(command: string, text: string, element: HTML
         endIndex = text.length;
     }
 
-    let [opening, closing] = getControlCharachters(command);
-    let pre = text.slice(0, startIndex);
-    let subject = text.slice(startIndex, endIndex);
-    let post = text.slice(endIndex, text.length);
-    let result = pre + opening + subject + closing + post;
+    const [opening, closing] = getControlCharachters(command);
+    const pre = text.slice(0, startIndex);
+    const subject = text.slice(startIndex, endIndex);
+    const post = text.slice(endIndex, text.length);
+    const result = pre + opening + subject + closing + post;
 
     element.value = result;
 }
 
 function applyResetCommand(text: string, element: HTMLInputElement | HTMLTextAreaElement): void {
-    let result = text
+    const result = text
         .replace(unicodeCodes.LEFT_TO_RIGHT_EMBEDDING, "")
         .replace(unicodeCodes.RIGHT_TO_LEFT_EMBEDDING, "")
         .replace(unicodeCodes.POP_DIRECTIONAL_FORMATTING, "");
@@ -50,10 +53,10 @@ function getControlCharachters(command: string): [string, string] {
 
 function observeChanges(window: Window): void {
     window.addEventListener("input", (event: Event) => {
-        let target = <Element>event.target;
+        const target = event.target as Element;
 
         if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
-            let value: string = target.value;
+            const value: string = target.value;
 
             if (value.includes(unicodeCodes.LEFT_TO_RIGHT_EMBEDDING)
                 || value.includes(unicodeCodes.RIGHT_TO_LEFT_EMBEDDING)

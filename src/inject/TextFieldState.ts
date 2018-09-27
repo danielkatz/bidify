@@ -8,31 +8,14 @@ const SELECTION_START_SYMBOL = "[";
 const SELECTION_END_SYMBOL = "]";
 
 export default class TextFieldState {
-    constructor(
-        public readonly value: string,
-        public readonly selectionStart: number,
-        public readonly selectionEnd: number) {
-
-        if (typeof value !== "string")
-            throw "value must be a string value";
-
-        if (selectionStart < 0)
-            throw "selectionStart should be a positive number";
-
-        if (selectionStart > selectionEnd)
-            throw "selectionStart cannot be larger than selectionEnd";
-
-        if (selectionEnd > value.length) {
-            throw "selectionEnd cannot be larger than the length of value";
-        }
-    }
-
-    static fromDebugString(value: string): TextFieldState {
+    public static fromDebugString(value: string): TextFieldState {
         const selectionStart = value.indexOf(SELECTION_START_SYMBOL);
         const selectionEnd = value.lastIndexOf(SELECTION_END_SYMBOL) - 1;
 
-        if (selectionStart < 0 || selectionEnd < 0)
-            throw `debug string must contain at least '${SELECTION_START_SYMBOL}' and '${SELECTION_END_SYMBOL}' symbols`;
+        if (selectionStart < 0 || selectionEnd < 0) {
+            // tslint:disable-next-line:max-line-length
+            throw new Error(`debug string must contain at least '${SELECTION_START_SYMBOL}' and '${SELECTION_END_SYMBOL}' symbols`);
+        }
 
         value = value.substring(0, selectionStart) + value.substring(selectionStart + 1, value.length);
         value = value.substring(0, selectionEnd) + value.substring(selectionEnd + 1, value.length);
@@ -45,12 +28,34 @@ export default class TextFieldState {
         return new TextFieldState(value, selectionStart, selectionEnd);
     }
 
-    toDebugString(): string {
+    constructor(
+        public readonly value: string,
+        public readonly selectionStart: number,
+        public readonly selectionEnd: number) {
+
+        if (typeof value !== "string") {
+            throw new Error("value must be a string value");
+        }
+
+        if (selectionStart < 0) {
+            throw new Error("selectionStart should be a positive number");
+        }
+
+        if (selectionStart > selectionEnd) {
+            throw new Error("selectionStart cannot be larger than selectionEnd");
+        }
+
+        if (selectionEnd > value.length) {
+            throw new Error("selectionEnd cannot be larger than the length of value");
+        }
+    }
+
+    public toDebugString(): string {
         let result = "";
 
         if (this.value.length > 0) {
             for (let i = 0; i < this.value.length; i++) {
-                let char = this.value.charAt(i);
+                const char = this.value.charAt(i);
 
                 if (i === this.selectionStart) {
                     result += SELECTION_START_SYMBOL;

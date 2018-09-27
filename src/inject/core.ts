@@ -6,4 +6,4 @@ export const unicodeCodes = {
     // LEFT_TO_RIGHT_ISOLATE: "\u2066",
     // RIGHT_TO_LEFT_ISOLATE: "\u2067",
     // POP_DIRECTIONAL_ISOLATE: "\u2069",
-}
+};

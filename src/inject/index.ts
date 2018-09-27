@@ -1,6 +1,6 @@
 import _ from "lodash";
-import simpleField from "./simpleField";
 import contentEditable from "./contentEditable";
+import simpleField from "./simpleField";
 
 function onCommand(command: string): void {
     const doc = getActiveDocument();
@@ -27,7 +27,7 @@ function getActiveDocument(): Document {
     let doc = window.document;
 
     while (doc) {
-        let elem: Element = doc.activeElement;
+        const elem: Element = doc.activeElement;
 
         if (elem && elem instanceof HTMLIFrameElement) {
             doc = elem.contentDocument;

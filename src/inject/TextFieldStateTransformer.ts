@@ -4,23 +4,23 @@ import TextFieldState from "./TextFieldState";
 export enum TransformationOperation {
     RightToLeft,
     LeftToRight,
-    Natural
+    Natural,
 }
 
 export class TextFieldStateTransformer {
 
-    transform(input: TextFieldState, operation: TransformationOperation): TextFieldState {
-        var applied = this.applyOperation(input, operation);
-        var simplified = this.simplify(applied);
+    public transform(input: TextFieldState, operation: TransformationOperation): TextFieldState {
+        const applied = this.applyOperation(input, operation);
+        const simplified = this.simplify(applied);
 
         return simplified;
     }
 
-    applyOperation(input: TextFieldState, operation: TransformationOperation): TextFieldState {
+    public applyOperation(input: TextFieldState, operation: TransformationOperation): TextFieldState {
         return input;
     }
 
-    simplify(input: TextFieldState): TextFieldState {
+    public simplify(input: TextFieldState): TextFieldState {
         return input;
     }
 
