@@ -15,4 +15,8 @@ export class UnicodeChar extends UnicodeNode {
         this.char = char;
         this.type = type;
     }
+
+    public serialize(): string {
+        return this.char;
+    }
 }

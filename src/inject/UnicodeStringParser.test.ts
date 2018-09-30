@@ -14,11 +14,13 @@ describe("UnicodeStringParser", () => {
         expect(result).toBeInstanceOf(UnicodeString);
         expect(result.parent).toBeNull();
         expect(result.children.length).toBe(0);
+        expect(result.serialize()).toBe("");
     });
 
     test("can parse a plain text", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("ABC");
+        const input = "ABC";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -28,11 +30,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse a LTR embedding", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("→ABC♦");
+        const input = "→ABC♦";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -47,11 +51,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse a RTL embedding", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("←ABC♦");
+        const input = "←ABC♦";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -66,11 +72,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse embedding with missing closing character", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("←ABC");
+        const input = "←ABC";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -84,11 +92,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse embedding with missing opening character", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("ABC♦");
+        const input = "ABC♦";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -99,11 +109,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse nested embeddings", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("←←ABC♦♦");
+        const input = "←←ABC♦♦";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -123,11 +135,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse nested different embeddings", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("→←ABC♦♦");
+        const input = "→←ABC♦♦";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -147,11 +161,13 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 
     test("can parse composed string", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
-        const result = parser.parse("A→B♦C←D♦E");
+        const input = "A→B♦C←D♦E";
+        const result = parser.parse(input);
 
         const expected = new UnicodeString(
             [
@@ -173,5 +189,6 @@ describe("UnicodeStringParser", () => {
             ]);
 
         expect(result).toEqual(expected);
+        expect(result.serialize()).toBe(input);
     });
 });

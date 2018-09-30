@@ -29,6 +29,22 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         super.addChild(child);
     }
 
+    public serialize(): string {
+        let result = "";
+
+        if (this.opening) {
+            result += this.opening.serialize();
+        }
+
+        this.children.forEach((c, i) => result += c.serialize());
+
+        if (this.closing) {
+            result += this.closing.serialize();
+        }
+
+        return result;
+    }
+
     get direction(): UnicodeEmbeddingDirection {
         if (this._opening) {
             if (this._opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
