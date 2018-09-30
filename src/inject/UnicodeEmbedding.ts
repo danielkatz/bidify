@@ -5,8 +5,11 @@ import { UnicodeEmbeddingDirection } from "./UnicodeEmbeddingDirection";
 import { UnicodeNode } from "./UnicodeNode";
 
 export class UnicodeEmbedding extends UnicodeContainerNode {
-    public opening: UnicodeChar = null;
-    public closing: UnicodeChar = null;
+    // tslint:disable-next-line:variable-name
+    private _opening: UnicodeChar = null;
+
+    // tslint:disable-next-line:variable-name
+    private _closing: UnicodeChar = null;
 
     constructor(
         opening: UnicodeChar = null,
@@ -27,14 +30,42 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
     }
 
     get direction(): UnicodeEmbeddingDirection {
-        if (this.opening) {
-            if (this.opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
+        if (this._opening) {
+            if (this._opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
                 return UnicodeEmbeddingDirection.LeftToRight;
-            } else if (this.opening.type === UnicodeCharType.RightToLeftEmbeddingStart) {
+            } else if (this._opening.type === UnicodeCharType.RightToLeftEmbeddingStart) {
                 return UnicodeEmbeddingDirection.RightToLeft;
             }
         }
 
         return UnicodeEmbeddingDirection.Natural;
+    }
+
+    get opening(): UnicodeChar {
+        return this._opening;
+    }
+    set opening(value: UnicodeChar) {
+        if (this._opening) {
+            this._opening.parent = null;
+        }
+
+        if (value) {
+            this._opening = value;
+            this._opening.parent = this;
+        }
+    }
+
+    get closing(): UnicodeChar {
+        return this._closing;
+    }
+    set closing(value: UnicodeChar) {
+        if (this._closing) {
+            this._closing.parent = null;
+        }
+
+        if (value) {
+            this._closing = value;
+            this._closing.parent = this;
+        }
     }
 }
