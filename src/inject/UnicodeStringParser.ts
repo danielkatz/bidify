@@ -1,15 +1,15 @@
+import { UnicodeChar } from "./UnicodeChar";
+import { UnicodeCharType } from "./UnicodeCharType";
 import { IUnicodeCodes } from "./UnicodeCodes";
 import { UnicodeContainerNode } from "./UnicodeContainerNode";
 import { UnicodeEmbedding } from "./UnicodeEmbedding";
 import { UnicodeEmbeddingType } from "./UnicodeEmbeddingType";
-import { UnicodeInline } from "./UnicodeInline";
 import { UnicodeString } from "./UnicodeString";
 
 export class UnicodeStringParser {
 
     private readonly unicode: IUnicodeCodes;
-    private parent: UnicodeContainerNode;
-    private pendingStringSegment: string;
+    private context: UnicodeContainerNode;
 
     constructor(unicode: IUnicodeCodes) {
         this.unicode = unicode;
@@ -17,66 +17,72 @@ export class UnicodeStringParser {
 
     public parse(text: string): UnicodeString {
         const result = new UnicodeString();
-        this.parent = result;
-        this.pendingStringSegment = "";
+        this.context = result;
 
         for (let i = 0; i < text.length; i++) {
             const char = text.charAt(i);
 
-            if (char === this.unicode.LEFT_TO_RIGHT_EMBEDDING) {
+            const charNode = this.parseChar(char);
 
-                this.openDirectionalSegment(UnicodeEmbeddingType.LeftToRight);
-
-            } else if (char === this.unicode.RIGHT_TO_LEFT_EMBEDDING) {
-
-                this.openDirectionalSegment(UnicodeEmbeddingType.RightToLeft);
-
-            } else if (char === this.unicode.POP_DIRECTIONAL_FORMATTING) {
-
-                this.closeDirectionalSegment();
-
-            } else {
-
-                this.pendingStringSegment += char;
-
-            }
+            this.processCharNode(charNode);
         }
-
-        this.commitPendingStringSegment();
 
         return result;
     }
 
-    private commitPendingStringSegment() {
-        if (this.pendingStringSegment) {
-            const inline = new UnicodeInline(this.pendingStringSegment);
+    private parseChar(char: string): UnicodeChar {
+        let charType: UnicodeCharType;
+        if (char === this.unicode.LEFT_TO_RIGHT_EMBEDDING) {
+            charType = UnicodeCharType.LeftToRightEmbeddingStart;
+        } else if (char === this.unicode.RIGHT_TO_LEFT_EMBEDDING) {
+            charType = UnicodeCharType.RightToLeftEmbeddingStart;
+        } else if (char === this.unicode.POP_DIRECTIONAL_FORMATTING) {
+            charType = UnicodeCharType.EmbeddingEnd;
+        } else {
+            charType = UnicodeCharType.Literal;
+        }
+        return new UnicodeChar(char, charType);
+    }
 
-            this.parent.addChild(inline);
-            this.pendingStringSegment = "";
+    private processCharNode(charNode: UnicodeChar): void {
+        if (charNode.type === UnicodeCharType.LeftToRightEmbeddingStart) {
+
+            this.startEmbeddingContext(charNode);
+
+        } else if (charNode.type === UnicodeCharType.RightToLeftEmbeddingStart) {
+
+            this.startEmbeddingContext(charNode);
+
+        } else if (charNode.type === UnicodeCharType.EmbeddingEnd) {
+
+            this.closeEmbeddingContext(charNode);
+
+        } else {
+
+            this.context.addChild(charNode);
+
         }
     }
 
-    private openDirectionalSegment(direction: UnicodeEmbeddingType) {
-        this.commitPendingStringSegment();
+    private startEmbeddingContext(charNode: UnicodeChar) {
+        const embedding = new UnicodeEmbedding();
 
-        const embedding = new UnicodeEmbedding(direction);
-        embedding.hasOpeningChar = true;
+        embedding.addChild(charNode);
 
-        this.parent.addChild(embedding);
-        this.parent = embedding;
+        this.context.addChild(embedding);
+        this.context = embedding;
     }
 
-    private closeDirectionalSegment() {
-        this.commitPendingStringSegment();
+    private closeEmbeddingContext(charNode: UnicodeChar) {
+        if (this.context instanceof UnicodeEmbedding) {
+            this.context.addChild(charNode);
 
-        if (this.parent instanceof UnicodeEmbedding) {
-            this.parent.hasClosingChar = true;
-            this.parent = this.parent.parent;
+            this.context = this.context.parent;
         } else {
-            const embedding = new UnicodeEmbedding(UnicodeEmbeddingType.Natural);
-            embedding.hasOpeningChar = false;
-            embedding.hasClosingChar = true;
-            this.parent.addChild(embedding);
+            const embedding = new UnicodeEmbedding();
+
+            embedding.addChild(charNode);
+            this.context.addChild(embedding);
         }
     }
 }

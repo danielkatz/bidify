@@ -1,8 +1,8 @@
 import "jest";
+import { UnicodeChar } from "./UnicodeChar";
+import { UnicodeCharType } from "./UnicodeCharType";
 import { DebugUnicodeCodes } from "./UnicodeCodes";
 import { UnicodeEmbedding } from "./UnicodeEmbedding";
-import { UnicodeEmbeddingType } from "./UnicodeEmbeddingType";
-import { UnicodeInline } from "./UnicodeInline";
 import { UnicodeString } from "./UnicodeString";
 import { UnicodeStringParser } from "./UnicodeStringParser";
 
@@ -20,9 +20,14 @@ describe("UnicodeStringParser", () => {
         const parser = new UnicodeStringParser(DebugUnicodeCodes);
         const result = parser.parse("ABC");
 
-        expect(result.children.length).toBe(1);
-        expect(result.children[0]).toBeInstanceOf(UnicodeInline);
-        expect((result.children[0] as UnicodeInline).text).toBe("ABC");
+        const expected = new UnicodeString(
+            [
+                new UnicodeChar("A", UnicodeCharType.Literal),
+                new UnicodeChar("B", UnicodeCharType.Literal),
+                new UnicodeChar("C", UnicodeCharType.Literal),
+            ]);
+
+        expect(result).toEqual(expected);
     });
 
     test("can parse a LTR embedding", () => {
@@ -31,9 +36,13 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeEmbedding(UnicodeEmbeddingType.LeftToRight, true, true,
+                new UnicodeEmbedding(
                     [
-                        new UnicodeInline("ABC"),
+                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
+                        new UnicodeChar("A", UnicodeCharType.Literal),
+                        new UnicodeChar("B", UnicodeCharType.Literal),
+                        new UnicodeChar("C", UnicodeCharType.Literal),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
             ]);
 
@@ -46,9 +55,13 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, true,
+                new UnicodeEmbedding(
                     [
-                        new UnicodeInline("ABC"),
+                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                        new UnicodeChar("A", UnicodeCharType.Literal),
+                        new UnicodeChar("B", UnicodeCharType.Literal),
+                        new UnicodeChar("C", UnicodeCharType.Literal),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
             ]);
 
@@ -61,9 +74,12 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, false,
+                new UnicodeEmbedding(
                     [
-                        new UnicodeInline("ABC"),
+                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                        new UnicodeChar("A", UnicodeCharType.Literal),
+                        new UnicodeChar("B", UnicodeCharType.Literal),
+                        new UnicodeChar("C", UnicodeCharType.Literal),
                     ]),
             ]);
 
@@ -76,8 +92,13 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeInline("ABC"),
-                new UnicodeEmbedding(UnicodeEmbeddingType.Natural, false, true),
+                new UnicodeChar("A", UnicodeCharType.Literal),
+                new UnicodeChar("B", UnicodeCharType.Literal),
+                new UnicodeChar("C", UnicodeCharType.Literal),
+                new UnicodeEmbedding(
+                    [
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
+                    ]),
             ]);
 
         expect(result).toEqual(expected);
@@ -89,12 +110,18 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, true,
+                new UnicodeEmbedding(
                     [
-                        new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, true,
+                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                        new UnicodeEmbedding(
                             [
-                                new UnicodeInline("ABC"),
+                                new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                                new UnicodeChar("A", UnicodeCharType.Literal),
+                                new UnicodeChar("B", UnicodeCharType.Literal),
+                                new UnicodeChar("C", UnicodeCharType.Literal),
+                                new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                             ]),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
             ]);
 
@@ -107,12 +134,18 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeEmbedding(UnicodeEmbeddingType.LeftToRight, true, true,
+                new UnicodeEmbedding(
                     [
-                        new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, true,
+                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
+                        new UnicodeEmbedding(
                             [
-                                new UnicodeInline("ABC"),
+                                new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                                new UnicodeChar("A", UnicodeCharType.Literal),
+                                new UnicodeChar("B", UnicodeCharType.Literal),
+                                new UnicodeChar("C", UnicodeCharType.Literal),
+                                new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                             ]),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
             ]);
 
@@ -125,17 +158,21 @@ describe("UnicodeStringParser", () => {
 
         const expected = new UnicodeString(
             [
-                new UnicodeInline("A"),
-                new UnicodeEmbedding(UnicodeEmbeddingType.LeftToRight, true, true,
+                new UnicodeChar("A", UnicodeCharType.Literal),
+                new UnicodeEmbedding(
                     [
-                        new UnicodeInline("B"),
+                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
+                        new UnicodeChar("B", UnicodeCharType.Literal),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
-                new UnicodeInline("C"),
-                new UnicodeEmbedding(UnicodeEmbeddingType.RightToLeft, true, true,
+                new UnicodeChar("C", UnicodeCharType.Literal),
+                new UnicodeEmbedding(
                     [
-                        new UnicodeInline("D"),
+                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
+                        new UnicodeChar("D", UnicodeCharType.Literal),
+                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
                     ]),
-                new UnicodeInline("E"),
+                new UnicodeChar("E", UnicodeCharType.Literal),
             ]);
 
         expect(result).toEqual(expected);
