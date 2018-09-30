@@ -1,4 +1,4 @@
-export enum UnicodeEmbeddingType {
+export enum UnicodeEmbeddingDirection {
     LeftToRight = "LTR",
     RightToLeft = "RTL",
     Natural = "AUTO",

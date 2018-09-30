@@ -3,7 +3,7 @@ import { UnicodeCharType } from "./UnicodeCharType";
 import { IUnicodeCodes } from "./UnicodeCodes";
 import { UnicodeContainerNode } from "./UnicodeContainerNode";
 import { UnicodeEmbedding } from "./UnicodeEmbedding";
-import { UnicodeEmbeddingType } from "./UnicodeEmbeddingType";
+import { UnicodeEmbeddingDirection } from "./UnicodeEmbeddingDirection";
 import { UnicodeString } from "./UnicodeString";
 
 export class UnicodeStringParser {
@@ -66,8 +66,7 @@ export class UnicodeStringParser {
 
     private startEmbeddingContext(charNode: UnicodeChar) {
         const embedding = new UnicodeEmbedding();
-
-        embedding.addChild(charNode);
+        embedding.opening = charNode;
 
         this.context.addChild(embedding);
         this.context = embedding;
@@ -75,13 +74,13 @@ export class UnicodeStringParser {
 
     private closeEmbeddingContext(charNode: UnicodeChar) {
         if (this.context instanceof UnicodeEmbedding) {
-            this.context.addChild(charNode);
+            this.context.closing = charNode;
 
             this.context = this.context.parent;
         } else {
             const embedding = new UnicodeEmbedding();
+            embedding.closing = charNode;
 
-            embedding.addChild(charNode);
             this.context.addChild(embedding);
         }
     }

@@ -37,13 +37,13 @@ describe("UnicodeStringParser", () => {
         const expected = new UnicodeString(
             [
                 new UnicodeEmbedding(
+                    new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                     [
-                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                         new UnicodeChar("A", UnicodeCharType.Literal),
                         new UnicodeChar("B", UnicodeCharType.Literal),
                         new UnicodeChar("C", UnicodeCharType.Literal),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
             ]);
 
         expect(result).toEqual(expected);
@@ -56,13 +56,13 @@ describe("UnicodeStringParser", () => {
         const expected = new UnicodeString(
             [
                 new UnicodeEmbedding(
+                    new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                     [
-                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                         new UnicodeChar("A", UnicodeCharType.Literal),
                         new UnicodeChar("B", UnicodeCharType.Literal),
                         new UnicodeChar("C", UnicodeCharType.Literal),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
             ]);
 
         expect(result).toEqual(expected);
@@ -75,8 +75,8 @@ describe("UnicodeStringParser", () => {
         const expected = new UnicodeString(
             [
                 new UnicodeEmbedding(
+                    new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                     [
-                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                         new UnicodeChar("A", UnicodeCharType.Literal),
                         new UnicodeChar("B", UnicodeCharType.Literal),
                         new UnicodeChar("C", UnicodeCharType.Literal),
@@ -95,10 +95,7 @@ describe("UnicodeStringParser", () => {
                 new UnicodeChar("A", UnicodeCharType.Literal),
                 new UnicodeChar("B", UnicodeCharType.Literal),
                 new UnicodeChar("C", UnicodeCharType.Literal),
-                new UnicodeEmbedding(
-                    [
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                new UnicodeEmbedding(null, null, new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
             ]);
 
         expect(result).toEqual(expected);
@@ -111,18 +108,18 @@ describe("UnicodeStringParser", () => {
         const expected = new UnicodeString(
             [
                 new UnicodeEmbedding(
+                    new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                     [
-                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                         new UnicodeEmbedding(
+                            new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                             [
-                                new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                                 new UnicodeChar("A", UnicodeCharType.Literal),
                                 new UnicodeChar("B", UnicodeCharType.Literal),
                                 new UnicodeChar("C", UnicodeCharType.Literal),
-                                new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                            ]),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                            ],
+                            new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
             ]);
 
         expect(result).toEqual(expected);
@@ -135,18 +132,18 @@ describe("UnicodeStringParser", () => {
         const expected = new UnicodeString(
             [
                 new UnicodeEmbedding(
+                    new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                     [
-                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                         new UnicodeEmbedding(
+                            new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                             [
-                                new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                                 new UnicodeChar("A", UnicodeCharType.Literal),
                                 new UnicodeChar("B", UnicodeCharType.Literal),
                                 new UnicodeChar("C", UnicodeCharType.Literal),
-                                new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                            ]),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                            ],
+                            new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
             ]);
 
         expect(result).toEqual(expected);
@@ -160,18 +157,18 @@ describe("UnicodeStringParser", () => {
             [
                 new UnicodeChar("A", UnicodeCharType.Literal),
                 new UnicodeEmbedding(
+                    new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                     [
-                        new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart),
                         new UnicodeChar("B", UnicodeCharType.Literal),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
                 new UnicodeChar("C", UnicodeCharType.Literal),
                 new UnicodeEmbedding(
+                    new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                     [
-                        new UnicodeChar("←", UnicodeCharType.RightToLeftEmbeddingStart),
                         new UnicodeChar("D", UnicodeCharType.Literal),
-                        new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd),
-                    ]),
+                    ],
+                    new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd)),
                 new UnicodeChar("E", UnicodeCharType.Literal),
             ]);
 

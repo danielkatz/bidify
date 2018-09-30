@@ -1,54 +1,40 @@
 import { UnicodeChar } from "./UnicodeChar";
 import { UnicodeCharType } from "./UnicodeCharType";
 import { UnicodeContainerNode } from "./UnicodeContainerNode";
-import { UnicodeEmbeddingType } from "./UnicodeEmbeddingType";
+import { UnicodeEmbeddingDirection } from "./UnicodeEmbeddingDirection";
 import { UnicodeNode } from "./UnicodeNode";
 
 export class UnicodeEmbedding extends UnicodeContainerNode {
+    public opening: UnicodeChar = null;
+    public closing: UnicodeChar = null;
+
     constructor(
-        children?: ReadonlyArray<UnicodeNode>) {
+        opening: UnicodeChar = null,
+        children?: ReadonlyArray<UnicodeNode>,
+        closing: UnicodeChar = null) {
         super(children);
+
+        this.opening = opening;
+        this.closing = closing;
     }
 
-    get type(): UnicodeEmbeddingType {
-        const opening = this.openingChar;
-        if (opening) {
-            if (opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
-                return UnicodeEmbeddingType.LeftToRight;
-            } else if (opening.type === UnicodeCharType.RightToLeftEmbeddingStart) {
-                return UnicodeEmbeddingType.RightToLeft;
+    public addChild(child: UnicodeNode) {
+        if (child instanceof UnicodeChar && child.type !== UnicodeCharType.Literal) {
+            throw new Error("direction control charachters should be added via dedicated properties");
+        }
+
+        super.addChild(child);
+    }
+
+    get direction(): UnicodeEmbeddingDirection {
+        if (this.opening) {
+            if (this.opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
+                return UnicodeEmbeddingDirection.LeftToRight;
+            } else if (this.opening.type === UnicodeCharType.RightToLeftEmbeddingStart) {
+                return UnicodeEmbeddingDirection.RightToLeft;
             }
         }
 
-        return UnicodeEmbeddingType.Natural;
-    }
-
-    get openingChar(): UnicodeChar {
-        if (this.children.length > 0) {
-            const first = this.children[0];
-
-            if (first instanceof UnicodeChar) {
-                if (first.type === UnicodeCharType.LeftToRightEmbeddingStart
-                    || first.type === UnicodeCharType.RightToLeftEmbeddingStart) {
-
-                    return first;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    get closingChar(): UnicodeChar {
-        if (this.children.length > 0) {
-            const last = this.children[this.children.length - 1];
-
-            if (last instanceof UnicodeChar) {
-                if (last.type === UnicodeCharType.EmbeddingEnd) {
-
-                    return last;
-                }
-            }
-        }
+        return UnicodeEmbeddingDirection.Natural;
     }
 }
