@@ -45,6 +45,47 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         return result;
     }
 
+    public getChildOffset(child: UnicodeNode) {
+        let offset = this.offset;
+
+        if (child === this.opening) {
+            return offset;
+        } else if (child === this.closing) {
+            return offset + this.length - this.closing.length;
+        } else {
+            const childIndex = this.children.indexOf(child);
+
+            if (childIndex < 0) {
+                throw new Error(`${child} is not a child of this node`);
+            }
+
+            if (this.opening) {
+                offset += this.opening.length;
+            }
+
+            for (let i = 0; i < childIndex; i++) {
+                const item = this.children[i];
+                offset += item.length;
+            }
+
+            return offset;
+        }
+    }
+
+    public get length(): number {
+        let len = super.length;
+
+        if (this.opening) {
+            len += this.opening.length;
+        }
+
+        if (this.closing) {
+            len += this.closing.length;
+        }
+
+        return len;
+    }
+
     get direction(): UnicodeEmbeddingDirection {
         if (this._opening) {
             if (this._opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
@@ -66,6 +107,10 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         }
 
         if (value) {
+            if (value.parent) {
+                throw new Error("node already has a parent");
+            }
+
             this._opening = value;
             this._opening.parent = this;
         }
@@ -80,6 +125,10 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         }
 
         if (value) {
+            if (value.parent) {
+                throw new Error("node already has a parent");
+            }
+
             this._closing = value;
             this._closing.parent = this;
         }
