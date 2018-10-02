@@ -3,7 +3,7 @@ import { UnicodeNode } from "./UnicodeNode";
 
 export abstract class UnicodeContainerNode extends UnicodeNode {
     // tslint:disable-next-line:variable-name
-    private readonly _children: UnicodeNode[] = [];
+    protected readonly _children: UnicodeNode[] = [];
 
     constructor(children?: ReadonlyArray<UnicodeNode>) {
         super();

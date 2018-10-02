@@ -13,6 +13,7 @@ describe("UnicodeEmbedding", () => {
 
             expect(embedding.opening).toBe(null);
             expect(embedding.children.length).toBe(0);
+            expect(embedding.content.length).toBe(0);
             expect(embedding.closing).toBe(null);
         });
 
@@ -21,8 +22,10 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening);
 
             expect(embedding.opening).toBe(opening);
-            expect(embedding.children).toContain(opening);
             expect(embedding.closing).toBe(null);
+
+            expect(embedding.children).toContain(opening);
+            expect(embedding.content).not.toContain(opening);
         });
 
         test("2 arguments supplied", () => {
@@ -31,9 +34,13 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening, [child]);
 
             expect(embedding.opening).toBe(opening);
+            expect(embedding.closing).toBe(null);
+
             expect(embedding.children).toContain(opening);
             expect(embedding.children).toContain(child);
-            expect(embedding.closing).toBe(null);
+
+            expect(embedding.content).not.toContain(opening);
+            expect(embedding.content).toContain(child);
         });
 
         test("3 arguments supplied", () => {
@@ -43,10 +50,15 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening, [child], closing);
 
             expect(embedding.opening).toBe(opening);
+            expect(embedding.closing).toBe(closing);
+
             expect(embedding.children).toContain(opening);
             expect(embedding.children).toContain(child);
             expect(embedding.children).toContain(closing);
-            expect(embedding.closing).toBe(closing);
+
+            expect(embedding.content).not.toContain(opening);
+            expect(embedding.content).toContain(child);
+            expect(embedding.content).not.toContain(closing);
         });
 
         test("sets parent property of children", () => {
@@ -69,6 +81,7 @@ describe("UnicodeEmbedding", () => {
             embedding.addChild(child);
 
             expect(embedding.children).toContain(child);
+            expect(embedding.content).toContain(child);
         });
 
         test("sets parent property to this instance", () => {
@@ -99,6 +112,7 @@ describe("UnicodeEmbedding", () => {
             embedding.removeChild(child);
 
             expect(embedding.children).not.toContain(child);
+            expect(embedding.content).not.toContain(child);
         });
 
         test("sets parent property to null", () => {
@@ -112,6 +126,15 @@ describe("UnicodeEmbedding", () => {
     });
 
     describe("opening", () => {
+        test("adds to children array", () => {
+            const opening = new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart);
+            const embedding = new UnicodeEmbedding();
+
+            embedding.opening = opening;
+
+            expect(embedding.children).toContain(opening);
+        });
+
         test("releases old opening", () => {
             const opening1 = new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart);
             const opening2 = new UnicodeChar("→", UnicodeCharType.LeftToRightEmbeddingStart);
@@ -134,6 +157,15 @@ describe("UnicodeEmbedding", () => {
     });
 
     describe("closing", () => {
+        test("adds to children array", () => {
+            const closing = new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd);
+            const embedding = new UnicodeEmbedding();
+
+            embedding.closing = closing;
+
+            expect(embedding.children).toContain(closing);
+        });
+
         test("releases old closing", () => {
             const closing1 = new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd);
             const closing2 = new UnicodeChar("♦", UnicodeCharType.EmbeddingEnd);

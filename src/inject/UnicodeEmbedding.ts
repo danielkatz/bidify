@@ -41,6 +41,10 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         }
     }
 
+    get content(): ReadonlyArray<UnicodeNode> {
+        return this._children;
+    }
+
     get direction(): UnicodeEmbeddingDirection {
         if (this._opening) {
             if (this._opening.type === UnicodeCharType.LeftToRightEmbeddingStart) {
