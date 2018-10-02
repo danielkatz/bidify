@@ -5,8 +5,8 @@ module.exports = {
     ["jest-junit", {
       output: "./test-results/jest/results.xml",
       suiteName: "jest tests",
-      classNameTemplate: "{classname}-{title}",
-      titleTemplate: "{classname}-{title}",
+      classNameTemplate: "{classname}",
+      titleTemplate: "{title}",
       ancestorSeparator: " › ",
       usePathForSuiteName: "true"
     }]
