@@ -21,7 +21,7 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening);
 
             expect(embedding.opening).toBe(opening);
-            expect(embedding.children.length).toBe(0);
+            expect(embedding.children).toContain(opening);
             expect(embedding.closing).toBe(null);
         });
 
@@ -31,6 +31,7 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening, [child]);
 
             expect(embedding.opening).toBe(opening);
+            expect(embedding.children).toContain(opening);
             expect(embedding.children).toContain(child);
             expect(embedding.closing).toBe(null);
         });
@@ -42,7 +43,9 @@ describe("UnicodeEmbedding", () => {
             const embedding = new UnicodeEmbedding(opening, [child], closing);
 
             expect(embedding.opening).toBe(opening);
+            expect(embedding.children).toContain(opening);
             expect(embedding.children).toContain(child);
+            expect(embedding.children).toContain(closing);
             expect(embedding.closing).toBe(closing);
         });
 

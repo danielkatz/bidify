@@ -15,30 +15,6 @@ export class UnicodeString extends UnicodeContainerNode {
         super(children);
     }
 
-    public serialize(): string {
-        let result = "";
-
-        this.children.forEach((c, i) => result += c.serialize());
-
-        return result;
-    }
-
-    public getChildOffset(child: UnicodeNode) {
-        let offset = this.offset;
-        const childIndex = this.children.indexOf(child);
-
-        if (childIndex < 0) {
-            throw new Error(`${child} is not a child of this node`);
-        }
-
-        for (let i = 0; i < childIndex; i++) {
-            const item = this.children[i];
-            offset += item.length;
-        }
-
-        return offset;
-    }
-
     public get offset(): number {
         return 0;
     }

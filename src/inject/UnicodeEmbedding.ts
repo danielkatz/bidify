@@ -29,61 +29,16 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         super.addChild(child);
     }
 
-    public serialize(): string {
-        let result = "";
-
+    public * enumerateChildren(): IterableIterator<UnicodeNode> {
         if (this.opening) {
-            result += this.opening.serialize();
+            yield this.opening;
         }
 
-        this.children.forEach((c, i) => result += c.serialize());
+        yield* super.enumerateChildren();
 
         if (this.closing) {
-            result += this.closing.serialize();
+            yield this.closing;
         }
-
-        return result;
-    }
-
-    public getChildOffset(child: UnicodeNode) {
-        let offset = this.offset;
-
-        if (child === this.opening) {
-            return offset;
-        } else if (child === this.closing) {
-            return offset + this.length - this.closing.length;
-        } else {
-            const childIndex = this.children.indexOf(child);
-
-            if (childIndex < 0) {
-                throw new Error(`${child} is not a child of this node`);
-            }
-
-            if (this.opening) {
-                offset += this.opening.length;
-            }
-
-            for (let i = 0; i < childIndex; i++) {
-                const item = this.children[i];
-                offset += item.length;
-            }
-
-            return offset;
-        }
-    }
-
-    public get length(): number {
-        let len = super.length;
-
-        if (this.opening) {
-            len += this.opening.length;
-        }
-
-        if (this.closing) {
-            len += this.closing.length;
-        }
-
-        return len;
     }
 
     get direction(): UnicodeEmbeddingDirection {

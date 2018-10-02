@@ -30,18 +30,43 @@ export abstract class UnicodeContainerNode extends UnicodeNode {
         }
     }
 
-    public abstract getChildOffset(child: UnicodeNode);
+    public getChildOffset(child: UnicodeNode) {
+        let offset = this.offset;
+
+        for (const node of this.children) {
+            if (node === child) {
+                return offset;
+            } else {
+                offset += node.length;
+            }
+        }
+
+        throw new Error(`${child} is not a child of this node`);
+    }
+
+    public serialize(): string {
+        let result = "";
+
+        this.children.forEach((c, i) => result += c.serialize());
+
+        return result;
+    }
+
+    protected * enumerateChildren(): IterableIterator<UnicodeNode> {
+        yield* this._children;
+    }
 
     get children(): ReadonlyArray<UnicodeNode> {
-        return this._children;
+        return Array.from(this.enumerateChildren());
     }
 
     public get length(): number {
-        if (this.children.length === 0) {
+        const list = this.children;
+        if (list.length === 0) {
             return 0;
         }
 
-        return this.children
+        return list
             .map((n) => n.length)
             .reduce((a, b) => a + b);
     }
