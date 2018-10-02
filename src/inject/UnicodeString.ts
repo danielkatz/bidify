@@ -1,18 +1,42 @@
 import { UnicodeCodes } from "./UnicodeCodes";
 import { UnicodeContainerNode } from "./UnicodeContainerNode";
+import { UnicodeEmbedding } from "./UnicodeEmbedding";
 import { UnicodeNode } from "./UnicodeNode";
 import { UnicodeStringParser } from "./UnicodeStringParser";
 import { UnicodeStringSelection } from "./UnicodeStringSelection";
+import { UnicodeChar } from "./UnicodeChar";
 
 export class UnicodeString extends UnicodeContainerNode {
+
     public static parse(text: string): UnicodeString {
         const parser = new UnicodeStringParser(UnicodeCodes);
 
         return parser.parse(text);
     }
 
+    private readonly selection: UnicodeStringSelection;
+
     constructor(children?: ReadonlyArray<UnicodeNode>) {
         super(children);
+
+        this.selection = new UnicodeStringSelection(this);
+    }
+
+    public wrapSelection(embedding: UnicodeEmbedding): UnicodeString {
+        throw new Error("not implemented");
+    }
+
+    public unwrapSelection(): UnicodeString {
+        throw new Error("not implemented");
+    }
+
+    public getCharAt(offset: number) {
+        for (const node of this.enumerateDescendants()) {
+            if (node instanceof UnicodeChar && node.offset === offset) {
+                return node;
+            }
+        }
+        return null;
     }
 
     public get offset(): number {
@@ -20,18 +44,16 @@ export class UnicodeString extends UnicodeContainerNode {
     }
 
     public getSelection(): UnicodeStringSelection {
-        throw new Error("Not implemented");
+        return this.selection;
     }
 
-    public setSelection(value: UnicodeStringSelection);
-    public setSelection(startIndex: number, endIndex: number);
-    public setSelection(startIndexOrSelection: number | UnicodeStringSelection, endIndex?: number) {
-        if (startIndexOrSelection instanceof UnicodeStringSelection) {
-            const selection = startIndexOrSelection;
+    public setSelection(
+        selectionStart: number,
+        selectionEnd: number,
+        selectionDirection: "forward" | "backward" | "none") {
 
-            throw new Error("Not implemented");
-        } else {
-            throw new Error("Not implemented");
-        }
+        this.selection.selectionStart = selectionStart;
+        this.selection.selectionEnd = selectionEnd;
+        this.selection.selectionDirection = selectionDirection;
     }
 }

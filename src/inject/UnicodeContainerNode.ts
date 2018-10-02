@@ -56,6 +56,15 @@ export abstract class UnicodeContainerNode extends UnicodeNode {
         yield* this._children;
     }
 
+    protected * enumerateDescendants(): IterableIterator<UnicodeNode> {
+        for (const node of this.children) {
+            yield node;
+            if (node instanceof UnicodeContainerNode) {
+                yield* node.enumerateDescendants();
+            }
+        }
+    }
+
     get children(): ReadonlyArray<UnicodeNode> {
         return Array.from(this.enumerateChildren());
     }
