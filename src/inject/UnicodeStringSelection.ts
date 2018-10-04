@@ -23,7 +23,7 @@ export class UnicodeStringSelection {
         return this.context.getCharAt(this.selectionEnd);
     }
 
-    public get isContinuous(): boolean {
+    public get isContained(): boolean {
         if (this.isCollapsed) {
             return true;
         }
@@ -31,9 +31,9 @@ export class UnicodeStringSelection {
         const anchor = this.anchorNode;
         const focus = this.focusNode;
 
-        if (anchor && this.focusNode) {
+        if (anchor && focus) {
             return anchor.parent === focus.parent;
-        } else if (anchor && !focus) {
+        } else if (anchor) {
             return anchor.parent === this.context;
         }
 

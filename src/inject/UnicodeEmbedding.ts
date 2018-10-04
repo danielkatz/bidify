@@ -5,10 +5,7 @@ import { UnicodeEmbeddingDirection } from "./UnicodeEmbeddingDirection";
 import { UnicodeNode } from "./UnicodeNode";
 
 export class UnicodeEmbedding extends UnicodeContainerNode {
-    // tslint:disable-next-line:variable-name
     private _opening: UnicodeChar = null;
-
-    // tslint:disable-next-line:variable-name
     private _closing: UnicodeChar = null;
 
     constructor(

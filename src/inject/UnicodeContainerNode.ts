@@ -2,7 +2,6 @@ import _ from "lodash";
 import { UnicodeNode } from "./UnicodeNode";
 
 export abstract class UnicodeContainerNode extends UnicodeNode {
-    // tslint:disable-next-line:variable-name
     protected readonly _children: UnicodeNode[] = [];
 
     constructor(children?: ReadonlyArray<UnicodeNode>) {

@@ -1,10 +1,11 @@
+import { UnicodeChar } from "./UnicodeChar";
+import { UnicodeCharType } from "./UnicodeCharType";
 import { UnicodeCodes } from "./UnicodeCodes";
 import { UnicodeContainerNode } from "./UnicodeContainerNode";
 import { UnicodeEmbedding } from "./UnicodeEmbedding";
 import { UnicodeNode } from "./UnicodeNode";
 import { UnicodeStringParser } from "./UnicodeStringParser";
 import { UnicodeStringSelection } from "./UnicodeStringSelection";
-import { UnicodeChar } from "./UnicodeChar";
 
 export class UnicodeString extends UnicodeContainerNode {
 
@@ -23,7 +24,7 @@ export class UnicodeString extends UnicodeContainerNode {
     }
 
     public wrapSelection(embedding: UnicodeEmbedding): UnicodeString {
-        throw new Error("not implemented");
+            throw new Error("not implemented");
     }
 
     public unwrapSelection(): UnicodeString {

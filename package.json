@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "test": "jest",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "webpack"
   },
   "repository": {
