@@ -5,7 +5,6 @@ import { UnicodeContainerNode } from "./UnicodeContainerNode";
 import { UnicodeEmbedding } from "./UnicodeEmbedding";
 import { UnicodeNode } from "./UnicodeNode";
 import { UnicodeStringParser } from "./UnicodeStringParser";
-import { UnicodeStringSelection } from "./UnicodeStringSelection";
 
 export class UnicodeString extends UnicodeContainerNode {
 
@@ -15,29 +14,11 @@ export class UnicodeString extends UnicodeContainerNode {
         return parser.parse(text);
     }
 
-    private readonly selection: UnicodeStringSelection;
-
     constructor(children?: ReadonlyArray<UnicodeNode>) {
         super(children);
-
-        this.selection = new UnicodeStringSelection(this);
     }
 
     public get offset(): number {
         return 0;
-    }
-
-    public getSelection(): UnicodeStringSelection {
-        return this.selection;
-    }
-
-    public setSelection(
-        selectionStart: number,
-        selectionEnd: number,
-        selectionDirection: "forward" | "backward" | "none") {
-
-        this.selection.selectionStart = selectionStart;
-        this.selection.selectionEnd = selectionEnd;
-        this.selection.selectionDirection = selectionDirection;
     }
 }
