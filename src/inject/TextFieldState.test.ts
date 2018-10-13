@@ -24,7 +24,7 @@ describe("constructor", () => {
 
     test("can instansiate an TextFieldState", () => {
         expect(new TextFieldState("foo", 1, 3)).toEqual({
-            value: "foo",
+            text: "foo",
             selectionStart: 1,
             selectionEnd: 3,
         });
@@ -87,7 +87,7 @@ describe("fromDebugString", () => {
     test("can parse empty string", () => {
         const result = TextFieldState.fromDebugString("[]");
         expect(result).toEqual({
-            value: "",
+            text: "",
             selectionStart: 0,
             selectionEnd: 0,
         });
@@ -96,7 +96,7 @@ describe("fromDebugString", () => {
     test("can parse non-empty string with collaped selection at index 0", () => {
         const result = TextFieldState.fromDebugString("[]ABCDEFG");
         expect(result).toEqual({
-            value: "ABCDEFG",
+            text: "ABCDEFG",
             selectionStart: 0,
             selectionEnd: 0,
         });
@@ -105,7 +105,7 @@ describe("fromDebugString", () => {
     test("can parse non-empty string with collaped selection at the end", () => {
         const result = TextFieldState.fromDebugString("ABCDEFG[]");
         expect(result).toEqual({
-            value: "ABCDEFG",
+            text: "ABCDEFG",
             selectionStart: 7,
             selectionEnd: 7,
         });
@@ -114,7 +114,7 @@ describe("fromDebugString", () => {
     test("can parse non-empty string with selection", () => {
         const result = TextFieldState.fromDebugString("AB[CDE]FG");
         expect(result).toEqual({
-            value: "ABCDEFG",
+            text: "ABCDEFG",
             selectionStart: 2,
             selectionEnd: 5,
         });
@@ -123,7 +123,7 @@ describe("fromDebugString", () => {
     test("can parse LRE sybmol", () => {
         const result = TextFieldState.fromDebugString("[]→");
         expect(result).toEqual({
-            value: "\u202A",
+            text: "\u202A",
             selectionStart: 0,
             selectionEnd: 0,
         });
@@ -132,7 +132,7 @@ describe("fromDebugString", () => {
     test("can parse RLE sybmol", () => {
         const result = TextFieldState.fromDebugString("[]←");
         expect(result).toEqual({
-            value: "\u202B",
+            text: "\u202B",
             selectionStart: 0,
             selectionEnd: 0,
         });
@@ -141,7 +141,7 @@ describe("fromDebugString", () => {
     test("can parse PDF sybmol", () => {
         const result = TextFieldState.fromDebugString("[]♦");
         expect(result).toEqual({
-            value: "\u202C",
+            text: "\u202C",
             selectionStart: 0,
             selectionEnd: 0,
         });
@@ -150,7 +150,7 @@ describe("fromDebugString", () => {
     test("can parse combination", () => {
         const result = TextFieldState.fromDebugString("A←[BCD]E♦FG");
         expect(result).toEqual({
-            value: "A" + "\u202B" + "BCDE" + "\u202C" + "FG",
+            text: "A" + "\u202B" + "BCDE" + "\u202C" + "FG",
             selectionStart: 2,
             selectionEnd: 5,
         });
@@ -159,7 +159,7 @@ describe("fromDebugString", () => {
     test("can parse selection at the end", () => {
         const result = TextFieldState.fromDebugString("ABC[]");
         expect(result).toEqual({
-            value: "ABC",
+            text: "ABC",
             selectionStart: 3,
             selectionEnd: 3,
         });

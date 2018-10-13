@@ -26,6 +26,14 @@ export class UnicodeEmbedding extends UnicodeContainerNode {
         super.addChild(child);
     }
 
+    public insertChild(child: UnicodeNode, index: number) {
+        if (child instanceof UnicodeChar && child.type !== UnicodeCharType.Literal) {
+            throw new Error("direction control charachters should be added via dedicated properties");
+        }
+
+        super.insertChild(child, index);
+    }
+
     public * enumerateChildren(): IterableIterator<UnicodeNode> {
         if (this.opening) {
             yield this.opening;

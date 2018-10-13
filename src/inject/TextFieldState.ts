@@ -29,11 +29,11 @@ export default class TextFieldState {
     }
 
     constructor(
-        public readonly value: string,
+        public readonly text: string,
         public readonly selectionStart: number,
         public readonly selectionEnd: number) {
 
-        if (typeof value !== "string") {
+        if (typeof text !== "string") {
             throw new Error("value must be a string value");
         }
 
@@ -45,7 +45,7 @@ export default class TextFieldState {
             throw new Error("selectionStart cannot be larger than selectionEnd");
         }
 
-        if (selectionEnd > value.length) {
+        if (selectionEnd > text.length) {
             throw new Error("selectionEnd cannot be larger than the length of value");
         }
     }
@@ -53,9 +53,9 @@ export default class TextFieldState {
     public toDebugString(): string {
         let result = "";
 
-        if (this.value.length > 0) {
-            for (let i = 0; i < this.value.length; i++) {
-                const char = this.value.charAt(i);
+        if (this.text.length > 0) {
+            for (let i = 0; i < this.text.length; i++) {
+                const char = this.text.charAt(i);
 
                 if (i === this.selectionStart) {
                     result += SELECTION_START_SYMBOL;
@@ -77,11 +77,11 @@ export default class TextFieldState {
             }
         }
 
-        if (this.selectionStart === this.value.length) {
+        if (this.selectionStart === this.text.length) {
             result += SELECTION_START_SYMBOL;
         }
 
-        if (this.selectionEnd === this.value.length) {
+        if (this.selectionEnd === this.text.length) {
             result += SELECTION_END_SYMBOL;
         }
 

@@ -15,31 +15,6 @@ export class UnicodeStringSelection {
         this.selectionDirection = "none";
     }
 
-    public get anchorNode(): UnicodeChar {
-        return this.context.getCharAt(this.selectionStart);
-    }
-
-    public get focusNode(): UnicodeChar {
-        return this.context.getCharAt(this.selectionEnd);
-    }
-
-    public get isContained(): boolean {
-        if (this.isCollapsed) {
-            return true;
-        }
-
-        const anchor = this.anchorNode;
-        const focus = this.focusNode;
-
-        if (anchor && focus) {
-            return anchor.parent === focus.parent;
-        } else if (anchor) {
-            return anchor.parent === this.context;
-        }
-
-        return false;
-    }
-
     public get isCollapsed(): boolean {
         return this.selectionStart === this.selectionEnd;
     }

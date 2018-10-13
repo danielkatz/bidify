@@ -23,23 +23,6 @@ export class UnicodeString extends UnicodeContainerNode {
         this.selection = new UnicodeStringSelection(this);
     }
 
-    public wrapSelection(embedding: UnicodeEmbedding): UnicodeString {
-            throw new Error("not implemented");
-    }
-
-    public unwrapSelection(): UnicodeString {
-        throw new Error("not implemented");
-    }
-
-    public getCharAt(offset: number) {
-        for (const node of this.enumerateDescendants()) {
-            if (node instanceof UnicodeChar && node.offset === offset) {
-                return node;
-            }
-        }
-        return null;
-    }
-
     public get offset(): number {
         return 0;
     }

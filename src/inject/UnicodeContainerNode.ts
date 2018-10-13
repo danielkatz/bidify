@@ -21,12 +21,30 @@ export abstract class UnicodeContainerNode extends UnicodeNode {
         child.parent = this;
     }
 
+    public insertChild(child: UnicodeNode, index: number) {
+        if (child.parent) {
+            throw new Error("node already has a parent");
+        }
+
+        this._children.splice(index, 0, child);
+        child.parent = this;
+    }
+
     public removeChild(child: UnicodeNode) {
         const index = this._children.indexOf(child);
         if (index >= 0) {
             this._children.splice(index, 1);
             child.parent = null;
         }
+    }
+
+    public getChildIndex(child: UnicodeNode) {
+        const index = this._children.indexOf(child);
+
+        // openning and closing chars have no index, since they cannot be added via addChild
+        // and they are not a part of _children.
+        // TODO: come up with better naming or better design.
+        return index;
     }
 
     public getChildOffset(child: UnicodeNode) {
@@ -51,11 +69,11 @@ export abstract class UnicodeContainerNode extends UnicodeNode {
         return result;
     }
 
-    protected * enumerateChildren(): IterableIterator<UnicodeNode> {
+    public * enumerateChildren(): IterableIterator<UnicodeNode> {
         yield* this._children;
     }
 
-    protected * enumerateDescendants(): IterableIterator<UnicodeNode> {
+    public * enumerateDescendants(): IterableIterator<UnicodeNode> {
         for (const node of this.children) {
             yield node;
             if (node instanceof UnicodeContainerNode) {
